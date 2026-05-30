@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>DocMind AI</title>
+
+<style>
+
+body{
+    font-family:Arial;
+    background:#f4f6f9;
+}
+
+.container{
+    width:500px;
+    margin:auto;
+    margin-top:100px;
+    text-align:center;
+}
+
+.card{
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 4px 15px rgba(0,0,0,0.1);
+}
+
+h1{
+    color:#2563eb;
+}
+
+button{
+    background:#2563eb;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+
+<h1>📄 DocMind AI</h1>
+
+<p>
+Upload any PDF and let AI analyze it.
+</p>
+
+<form action="/upload"
+      method="post"
+      enctype="multipart/form-data">
+
+<input type="file" name="file">
+
+<br><br>
+
+<button type="submit">
+Upload PDF
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</body>
+</html>

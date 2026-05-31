@@ -1,94 +1,124 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>DocMind AI</title>
 
-    <style>
+<title>DocMind AI</title>
 
-        body{
-            font-family: Arial, sans-serif;
-            background:#f4f6f9;
-            margin:0;
-            padding:0;
-        }
+<style>
 
-        .container{
-            width:80%;
-            margin:auto;
-            margin-top:30px;
-        }
+body{
+    font-family:Arial;
+    background:#f4f6f9;
+    margin:0;
+    padding:0;
+}
 
-        .card{
-            background:white;
-            padding:25px;
-            border-radius:12px;
-            box-shadow:0 4px 12px rgba(0,0,0,0.1);
-        }
+.container{
+    width:80%;
+    margin:auto;
+    margin-top:30px;
+}
 
-        h1{
-            color:#2563eb;
-        }
+.card{
+    background:white;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
 
-        .filename{
-            font-weight:bold;
-            color:green;
-        }
+h1{
+    color:#2563eb;
+}
 
-        .text-box{
-            background:#f8fafc;
-            padding:15px;
-            border-radius:10px;
-            max-height:400px;
-            overflow:auto;
-            white-space:pre-wrap;
-            margin-top:15px;
-        }
+.filename{
+    color:green;
+    font-weight:bold;
+}
 
-        button{
-            background:#2563eb;
-            color:white;
-            border:none;
-            padding:12px 20px;
-            border-radius:8px;
-            cursor:pointer;
-            margin-top:15px;
-            margin-right:10px;
-        }
+.text-box{
+    background:#f8fafc;
+    padding:15px;
+    border-radius:10px;
+    max-height:400px;
+    overflow:auto;
+    white-space:pre-wrap;
+    margin-top:10px;
+}
 
-        button:hover{
-            background:#1d4ed8;
-        }
+button{
+    background:#2563eb;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:8px;
+    cursor:pointer;
+    margin-top:15px;
+    margin-right:10px;
+}
 
-    </style>
+button:hover{
+    background:#1d4ed8;
+}
+
+</style>
 
 </head>
+
 <body>
 
 <div class="container">
 
-    <div class="card">
+<div class="card">
 
-        <h1>📄 DocMind AI</h1>
+<h1>📄 DocMind AI</h1>
 
-        <p class="filename">
-            Uploaded File: {{ filename }}
-        </p>
+<p class="filename">
+Uploaded File: {{ filename }}
+</p>
 
-        <h3>Extracted Text</h3>
+<h3>Extracted Text</h3>
 
-        <div class="text-box">
-            {{ text }}
-        </div>
+<div class="text-box">
+{{ text }}
+</div>
 
-        <button>🧠 Generate Summary</button>
+<button onclick="generateSummary()">
+🧠 Generate Summary
+</button>
 
-        <button>📝 Generate Notes</button>
-
-        <button>❓ Generate MCQs</button>
-
-    </div>
+<div id="summary-box"></div>
 
 </div>
 
+</div>
+
+<script>
+
+async function generateSummary(){
+
+    const response = await fetch(
+        "/summary",
+        {
+            method:"POST"
+        }
+    );
+
+    const data = await response.json();
+
+    document.getElementById(
+        "summary-box"
+    ).innerHTML = `
+        <h3>AI Summary</h3>
+
+        <div class="text-box">
+            ${data.summary}
+        </div>
+    `;
+}
+
+</script>
+
 </body>
+
 </html>

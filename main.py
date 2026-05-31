@@ -1,5 +1,5 @@
 from fastapi import FastAPI, UploadFile, File, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from pypdf import PdfReader
 import os
@@ -11,6 +11,8 @@ templates = Jinja2Templates(directory="templates")
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+latest_text = ""
+
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
@@ -21,8 +23,12 @@ async def home(request: Request):
 
 
 @app.post("/upload", response_class=HTMLResponse)
-async def upload_pdf(request: Request,
-                     file: UploadFile = File(...)):
+async def upload_pdf(
+    request: Request,
+    file: UploadFile = File(...)
+):
+
+    global latest_text
 
     file_path = os.path.join(
         UPLOAD_FOLDER,
@@ -42,11 +48,45 @@ async def upload_pdf(request: Request,
         if page_text:
             text += page_text + "\n"
 
+    latest_text = text
+
     return templates.TemplateResponse(
         request=request,
         name="result.html",
         context={
             "filename": file.filename,
             "text": text[:5000]
+        }
+    )
+
+
+@app.post("/summary")
+async def generate_summary():
+
+    global latest_text
+
+    if not latest_text:
+        return JSONResponse(
+            content={
+                "summary": "No PDF uploaded."
+            }
+        )
+
+    summary = f"""
+    This document contains approximately
+    {len(latest_text.split())} words.
+
+    Main topics detected:
+    • Educational content
+    • Practical assignment information
+    • Student details
+
+    This is currently a demo summary.
+    AI summarization will be added next.
+    """
+
+    return JSONResponse(
+        content={
+            "summary": summary
         }
     )

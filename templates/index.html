@@ -5,71 +5,34 @@
 
 <title>DocMind AI</title>
 
-<style>
-
-body{
-    font-family:Arial;
-    background:#f4f6f9;
-}
-
-.container{
-    width:500px;
-    margin:auto;
-    margin-top:120px;
-}
-
-.card{
-    background:white;
-    padding:30px;
-    border-radius:15px;
-    box-shadow:0 4px 15px rgba(0,0,0,0.1);
-    text-align:center;
-}
-
-h1{
-    color:#2563eb;
-}
-
-p{
-    color:#555;
-}
-
-button{
-    background:#2563eb;
-    color:white;
-    border:none;
-    padding:12px 20px;
-    border-radius:8px;
-    cursor:pointer;
-}
-
-button:hover{
-    background:#1d4ed8;
-}
-
-</style>
+<link rel="stylesheet"
+href="/static/style.css">
 
 </head>
 
 <body>
 
+<div class="navbar">
+
+<h1>🚀 DocMind AI</h1>
+
+</div>
+
 <div class="container">
 
-<div class="card">
+<div class="upload-box">
 
-<h1>📄 DocMind AI</h1>
+<h2>Upload PDF</h2>
 
-<p>
-Upload any PDF and let AI analyze it.
-</p>
+<br>
 
 <form action="/upload"
-      method="post"
-      enctype="multipart/form-data">
+method="post"
+enctype="multipart/form-data">
 
 <input type="file"
-       name="file"
-       required>
+name="file"
+required>
 
 <br><br>
 
@@ -78,6 +41,40 @@ Upload PDF
 </button>
 
 </form>
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+<h3>🧠 AI Summary</h3>
+<p>Summarize any PDF instantly.</p>
+</div>
+
+<div class="card">
+<h3>📝 Notes Generator</h3>
+<p>Create study notes automatically.</p>
+</div>
+
+<div class="card">
+<h3>❓ MCQ Generator</h3>
+<p>Generate questions from PDFs.</p>
+</div>
+
+<div class="card">
+<h3>📄 Merge PDF</h3>
+<p>Combine multiple PDFs.</p>
+</div>
+
+<div class="card">
+<h3>✂ Split PDF</h3>
+<p>Split PDFs into pages.</p>
+</div>
+
+<div class="card">
+<h3>💼 Resume Analyzer</h3>
+<p>Check ATS score.</p>
+</div>
 
 </div>
 

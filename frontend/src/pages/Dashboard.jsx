@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 const NAV = [
   { icon: "⬢", label: "Dashboard",       id: "dashboard" },
@@ -40,6 +41,7 @@ export default function Dashboard() {
   const [mounted, setMounted]         = useState(false);
   const mainRef  = useRef(null);
   const inputRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setTimeout(() => setMounted(true), 50);
@@ -213,19 +215,27 @@ export default function Dashboard() {
 
           <div style={s.navLabel}>WORKSPACE</div>
 
-          <nav style={s.nav}>
-            {NAV.map((item, i) => {
-              const isActive = active === item.id;
-              return (
-                <button
-                  key={item.id}
-                  className="nav-btn"
-                  onClick={() => setActive(item.id)}
-                  style={{
-                    ...s.navBtn,
-                    ...(isActive ? s.navBtnActive : {}),
-                    animation: mounted ? `fadeUp .5s ${i * 60}ms both` : "none",
-                  }}
+<nav style={s.nav}>
+  {NAV.map((item, i) => {
+    const isActive = active === item.id;
+    return (
+      <button
+        key={item.id}
+        className="nav-btn"
+        onClick={() => {
+          setActive(item.id);
+          if (item.id === "merge") navigate("/merge");
+          if (item.id === "split") navigate("/split");
+          if (item.id === "compress") navigate("/compress");
+          if (item.id === "summary") navigate("/summary");
+          if (item.id === "notes") navigate("/notes");
+          if (item.id === "resume") navigate("/resume");
+        }}
+        style={{
+          ...s.navBtn,
+          ...(isActive ? s.navBtnActive : {}),
+          animation: mounted ? `fadeUp .5s ${i * 60}ms both` : "none",
+        }}
                 >
                   <span style={{ fontSize: 15, width: 18, textAlign: "center", color: isActive ? "#e53935" : "rgba(255,255,255,.32)", transition: "color .2s" }}>
                     {item.icon}

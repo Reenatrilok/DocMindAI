@@ -282,7 +282,77 @@ async def split_pdf(
             status_code=500,
             content={"error": f"Split failed: {str(e)}"}
         )
+@app.post("/compress")
+async def compress_pdf(
+    file: UploadFile = File(...),
+    quality: str = Form("medium")
+):
+    if not file.filename.endswith(".pdf"):
+        return JSONResponse(
+            status_code=400,
+            content={"error": "Only PDF files are supported."}
+        )
 
+    file_path = os.path.join(UPLOAD_FOLDER, f"{uuid.uuid4()}_{file.filename}")
+
+    try:
+        with open(file_path, "wb") as f:
+            f.write(await file.read())
+
+        reader = PdfReader(file_path)
+        writer = PdfWriter()
+
+        for page in reader.pages:
+            writer.add_page(page)
+
+        # Compression settings based on quality
+        if quality == "low":
+            compress = True
+            for page in writer.pages:
+                for img in page.images:
+                    img.replace(img.image, quality=20)
+        elif quality == "medium":
+            compress = True
+            for page in writer.pages:
+                for img in page.images:
+                    img.replace(img.image, quality=50)
+        else:  # high quality — less compression
+            compress = True
+            for page in writer.pages:
+                for img in page.images:
+                    img.replace(img.image, quality=75)
+
+        compressed_path = os.path.join(
+            UPLOAD_FOLDER,
+            f"compressed_{uuid.uuid4()}.pdf"
+        )
+
+        with open(compressed_path, "wb") as f:
+            writer.write(f)
+
+        original_size  = os.path.getsize(file_path)
+        compressed_size = os.path.getsize(compressed_path)
+        savings = round((1 - compressed_size / original_size) * 100, 1)
+
+        os.remove(file_path)
+
+        response = FileResponse(
+            path=compressed_path,
+            filename="compressed.pdf",
+            media_type="application/pdf",
+        )
+        response.headers["X-Original-Size"]   = str(original_size)
+        response.headers["X-Compressed-Size"] = str(compressed_size)
+        response.headers["X-Savings-Percent"] = str(savings)
+        response.headers["Access-Control-Expose-Headers"] = "X-Original-Size, X-Compressed-Size, X-Savings-Percent"
+
+        return response
+
+    except Exception as e:
+        return JSONResponse(
+            status_code=500,
+            content={"error": f"Compression failed: {str(e)}"}
+        )
 @app.get("/health")
 async def health():
     return {
